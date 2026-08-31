@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-building me-2 text-info"></i>Employer Dashboard</h2>
+    <a href="{% url 'create_job' %}" class="btn btn-primary"><i class="bi bi-plus-circle me-2"></i>Post New Job</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-3"><h3 class="text-primary">{{ stats.total_jobs }}</h3><p class="mb-0 text-muted">Total Jobs</p></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-3"><h3 class="text-success">{{ stats.approved_jobs }}</h3><p class="mb-0 text-muted">Approved</p></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-3"><h3 class="text-warning">{{ stats.pending_jobs }}</h3><p class="mb-0 text-muted">Pending</p></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-3"><h3 class="text-info">{{ stats.total_applications }}</h3><p class="mb-0 text-muted">Applications</p></div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white"><h5 class="mb-0">My Job Postings</h5></div>
+    <div class="card-body p-0">
+        {% if jobs %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr><th>Title</th><th>University</th><th>Type</th><th>Status</th><th>Applications</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr>
+                        <td>{{ job.title }}</td>
+                        <td>{{ job.university.name }}</td>
+                        <td><span class="badge bg-secondary">{{ job.get_job_type_display }}</span></td>
+                        <td>
+                            <span class="badge bg-{% if job.approval_status == 'approved' %}success{% elif job.approval_status == 'rejected' %}danger{% else %}warning{% endif %}">
+                                {{ job.get_approval_status_display }}
+                            </span>
+                        </td>
+                        <td><a href="{% url 'job_applicants' job.pk %}">{{ job.app_count }} applicants</a></td>
+                        <td>
+                            <a href="{% url 'edit_job' job.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                            <a href="{% url 'delete_job' job.pk %}" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted p-3">No jobs posted yet. <a href="{% url 'create_job' %}">Post your first job</a>.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

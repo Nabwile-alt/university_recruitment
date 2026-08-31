@@ -1,0 +1,11 @@
+Dear {{ employer_name }},
+
+Great news! Your job posting has been approved.
+
+Job Title: {{ job_title }}
+University: {{ university }}
+
+Your job is now live and students can apply.
+
+Best regards,
+University Job Recruitment System

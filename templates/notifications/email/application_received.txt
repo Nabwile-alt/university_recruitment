@@ -1,0 +1,12 @@
+Dear {{ employer_name }},
+
+You have received a new application for your job posting.
+
+Job Title: {{ job_title }}
+Applicant: {{ applicant_name }}
+Email: {{ applicant_email }}
+
+Log in to your dashboard to review the application.
+
+Best regards,
+University Job Recruitment System

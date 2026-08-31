@@ -1,0 +1,108 @@
+=========================================
+UNIVERSITY JOB RECRUITMENT SYSTEM
+Django + Python Setup & Run Commands
+=========================================
+
+PREREQUISITES
+-------------
+- Python 3.10+ installed
+- pip installed
+
+STEP 1: Extract the ZIP file
+-----------------------------
+Unzip the file and navigate into the project folder:
+    cd university_recruitment
+
+STEP 2: Create a virtual environment
+--------------------------------------
+Windows:
+    python -m venv venv
+    venv\Scripts\activate
+
+macOS / Linux:
+    python3 -m venv venv
+    source venv/bin/activate
+
+STEP 3: Install dependencies
+------------------------------
+    pip install -r requirements.txt
+
+STEP 4: Set up environment variables
+--------------------------------------
+Copy the example .env file:
+    cp .env.example .env
+
+Edit .env as needed (SECRET_KEY is the most important one).
+
+STEP 5: Run database migrations
+---------------------------------
+    python manage.py makemigrations accounts
+    python manage.py makemigrations universities
+    python manage.py makemigrations jobs
+    python manage.py makemigrations dashboards
+    python manage.py makemigrations notifications
+    python manage.py migrate
+
+STEP 6: Seed sample data (optional but recommended)
+-----------------------------------------------------
+    python manage.py seed_data
+
+This creates:
+  - 2 universities (MIT, Stanford)
+  - Sample departments
+  - Test accounts:
+      Staff:    staff@mit.edu       / password123
+      Employer: employer@techcorp.com / password123
+      Student:  student@example.com  / password123
+
+STEP 7: Create a superuser (admin access)
+-------------------------------------------
+    python manage.py createsuperuser
+
+STEP 8: Collect static files
+------------------------------
+    python manage.py collectstatic --noinput
+
+STEP 9: Run the development server
+------------------------------------
+    python manage.py runserver
+
+STEP 10: Open the app
+-----------------------
+Visit: http://127.0.0.1:8000/
+
+Admin panel: http://127.0.0.1:8000/admin/
+
+=========================================
+IMPORTANT URLs
+=========================================
+/                          → Job listings (home)
+/accounts/login/           → Login
+/accounts/register/student/  → Student registration
+/accounts/register/employer/ → Employer registration
+/accounts/register/staff/    → University Staff registration
+/dashboards/student/       → Student dashboard
+/dashboards/employer/      → Employer dashboard
+/dashboards/staff/         → University Staff dashboard
+/universities/             → Universities list
+/admin/                    → Admin panel
+
+=========================================
+EMAIL NOTIFICATIONS
+=========================================
+In development, emails print to the console.
+For production SMTP, update .env:
+    EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+    EMAIL_HOST_USER=your@gmail.com
+    EMAIL_HOST_PASSWORD=your-app-password
+
+=========================================
+PRODUCTION CHECKLIST
+=========================================
+1. Set DEBUG=False in .env
+2. Set a strong SECRET_KEY
+3. Configure ALLOWED_HOSTS with your domain
+4. Set up a production database (PostgreSQL)
+5. Use gunicorn: pip install gunicorn
+   gunicorn university_recruitment.wsgi:application
+6. Configure NGINX to serve static/media files

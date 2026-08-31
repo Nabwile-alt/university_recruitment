@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-person-badge me-2 text-warning"></i>University Staff Dashboard</h2>
+    <span class="badge bg-warning text-dark fs-6">{{ university.name }}</span>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-3"><h3 class="text-primary">{{ stats.total_jobs }}</h3><p class="mb-0 text-muted">Total Jobs</p></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-3"><h3 class="text-warning">{{ stats.pending_jobs }}</h3><p class="mb-0 text-muted">Pending Approval</p></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-3"><h3 class="text-success">{{ stats.approved_jobs }}</h3><p class="mb-0 text-muted">Approved</p></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-3"><h3 class="text-info">{{ stats.total_applications }}</h3><p class="mb-0 text-muted">Applications</p></div>
+        </div>
+    </div>
+</div>
+
+{% if pending_jobs %}
+<div class="card border-0 shadow-sm mb-4 border-start border-warning border-4">
+    <div class="card-header bg-white"><h5 class="mb-0 text-warning"><i class="bi bi-clock me-2"></i>Pending Approval ({{ pending_jobs.count }})</h5></div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr><th>Job Title</th><th>Employer</th><th>Department</th><th>Type</th><th>Posted</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    {% for job in pending_jobs %}
+                    <tr>
+                        <td>{{ job.title }}</td>
+                        <td>{{ job.employer.get_full_name }}</td>
+                        <td>{{ job.department.name|default:"N/A" }}</td>
+                        <td>{{ job.get_job_type_display }}</td>
+                        <td>{{ job.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <form method="post" action="{% url 'approve_job' job.pk %}" class="d-inline">
+                                {% csrf_token %}
+                                <button name="action" value="approve" class="btn btn-sm btn-success"><i class="bi bi-check"></i> Approve</button>
+                                <button name="action" value="reject" class="btn btn-sm btn-danger"><i class="bi bi-x"></i> Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white"><h5 class="mb-0">All Jobs at {{ university.name }}</h5></div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr><th>Title</th><th>Employer</th><th>Status</th><th>Applications</th><th>Posted</th></tr>
+                </thead>
+                <tbody>
+                    {% for job in all_jobs %}
+                    <tr>
+                        <td>{{ job.title }}</td>
+                        <td>{{ job.employer.get_full_name }}</td>
+                        <td>
+                            <span class="badge bg-{% if job.approval_status == 'approved' %}success{% elif job.approval_status == 'rejected' %}danger{% else %}warning{% endif %}">
+                                {{ job.get_approval_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ job.app_count }}</td>
+                        <td>{{ job.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white"><h5 class="mb-0">Recent Applications</h5></div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr><th>Student</th><th>Job</th><th>Status</th><th>Applied</th></tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>{{ app.student.get_full_name }}</td>
+                        <td>{{ app.job.title }}</td>
+                        <td><span class="badge bg-secondary">{{ app.get_status_display }}</span></td>
+                        <td>{{ app.applied_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

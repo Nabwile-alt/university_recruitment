@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4>Applicants for: {{ job.title }}</h4>
+        <p class="text-muted mb-0">{{ job.university.name }}</p>
+    </div>
+    <a href="{% url 'employer_dashboard' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>Back</a>
+</div>
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        {% if applications %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr><th>Applicant</th><th>Email</th><th>Applied</th><th>Resume</th><th>Status</th><th>Update</th></tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>{{ app.student.get_full_name }}</td>
+                        <td>{{ app.student.email }}</td>
+                        <td>{{ app.applied_at|date:"M d, Y" }}</td>
+                        <td>{% if app.resume %}<a href="{{ app.resume.url }}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="bi bi-file-pdf"></i></a>{% else %}-{% endif %}</td>
+                        <td>
+                            <span class="badge bg-{% if app.status == 'hired' %}success{% elif app.status == 'shortlisted' %}info{% elif app.status == 'rejected' %}danger{% else %}secondary{% endif %}">
+                                {{ app.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'update_application_status' app.pk %}" class="d-flex gap-1">
+                                {% csrf_token %}
+                                <select name="status" class="form-select form-select-sm" style="width:130px">
+                                    {% for val, label in app.STATUS_CHOICES %}
+                                    <option value="{{ val }}" {% if app.status == val %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted p-3">No applications yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

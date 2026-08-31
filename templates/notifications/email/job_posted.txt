@@ -1,0 +1,12 @@
+Dear {{ staff_name }},
+
+A new job posting requires your approval.
+
+Job Title: {{ job_title }}
+Posted by: {{ employer }}
+University: {{ university }}
+
+Please log in to your dashboard to review and approve or reject this posting.
+
+Best regards,
+University Job Recruitment System

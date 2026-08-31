@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-danger text-white"><h5 class="mb-0">Confirm Delete</h5></div>
+            <div class="card-body text-center p-4">
+                <i class="bi bi-trash display-3 text-danger mb-3"></i>
+                <p>Are you sure you want to delete <strong>"{{ job.title }}"</strong>?</p>
+                <p class="text-muted">This action cannot be undone.</p>
+                <form method="post" class="d-flex gap-2 justify-content-center">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <a href="{% url 'employer_jobs' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

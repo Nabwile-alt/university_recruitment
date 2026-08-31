@@ -1,0 +1,12 @@
+Dear {{ student_name }},
+
+Your application status has been updated.
+
+Job Title: {{ job_title }}
+Company: {{ employer }}
+New Status: {{ status }}
+
+Log in to your dashboard to view more details.
+
+Best regards,
+University Job Recruitment System

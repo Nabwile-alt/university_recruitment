@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+                {% if university.logo %}
+                <img src="{{ university.logo.url }}" class="img-fluid mb-3" style="max-height:120px" alt="{{ university.name }}">
+                {% else %}
+                <i class="bi bi-building display-2 text-primary mb-3"></i>
+                {% endif %}
+                <h4>{{ university.name }}</h4>
+                <p class="text-muted">{{ university.address }}</p>
+                {% if university.website %}<a href="{{ university.website }}" target="_blank" class="btn btn-outline-primary btn-sm">Visit Website</a>{% endif %}
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm mt-3">
+            <div class="card-header bg-white"><h6 class="mb-0">Departments</h6></div>
+            <ul class="list-group list-group-flush">
+                {% for dept in departments %}
+                <li class="list-group-item">{{ dept.name }}</li>
+                {% empty %}
+                <li class="list-group-item text-muted">No departments listed.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h4>Open Jobs at {{ university.name }} <span class="badge bg-primary">{{ jobs.count }}</span></h4>
+        {% for job in jobs %}
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6><a href="{% url 'job_detail' job.pk %}" class="text-decoration-none">{{ job.title }}</a></h6>
+                        <small class="text-muted">{{ job.department.name|default:"General" }} | <i class="bi bi-geo-alt me-1"></i>{{ job.location }}</small>
+                    </div>
+                    <div><span class="badge bg-info">{{ job.get_job_type_display }}</span></div>
+                </div>
+                <p class="mt-2 mb-0 text-muted small">{{ job.description|truncatechars:100 }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted">No open jobs at this university currently.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

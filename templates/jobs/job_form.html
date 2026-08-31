@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0"><i class="bi bi-briefcase-fill me-2"></i>{{ title }}</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" id="jobForm">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary flex-fill">
+                            <i class="bi bi-save me-2"></i>{% if job %}Update Job{% else %}Post Job{% endif %}
+                        </button>
+                        <a href="{% url 'employer_jobs' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.getElementById('id_university').addEventListener('change', function() {
+    const universityId = this.value;
+    const deptField = document.getElementById('id_department');
+    fetch(`?university=${universityId}`)
+        .then(r => r.text())
+        .then(() => { if(universityId) { deptField.innerHTML = '<option value="">Loading...</option>'; } });
+});
+</script>
+{% endblock %}
