@@ -99,3 +99,5 @@ gunicorn
 Django
 gunicorn
 python-decouple
+django-crispy-forms
+crispy-bootstrap5
