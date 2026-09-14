@@ -98,3 +98,4 @@ yt-dlp-ejs==0.5.0
 gunicorn
 Django
 gunicorn
+python-decouple
